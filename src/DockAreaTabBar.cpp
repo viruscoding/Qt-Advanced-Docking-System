@@ -548,6 +548,13 @@ int CDockAreaTabBar::tabInsertIndexAt(const QPoint& Pos) const
 	}
 }
 
+
+//===========================================================================
+bool CDockAreaTabBar::areTabsOverflowing() const
+{
+	return d->TabsContainerWidget->width() > width();
+}
+
 } // namespace ads
 
 

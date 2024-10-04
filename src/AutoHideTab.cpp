@@ -33,8 +33,7 @@
 #include <QApplication>
 #include <QElapsedTimer>
 #include <QMenu>
-#include <qevent.h>
-#include <qnamespace.h>
+#include <QEvent>
 
 #include "AutoHideDockContainer.h"
 #include "AutoHideSideBar.h"

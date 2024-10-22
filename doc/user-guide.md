@@ -712,7 +712,7 @@ If this flag is set (disabled by default), then holding a dragging cursor hover 
 
 ![AutoHideOpenOnDragHover](cfg_flag_AutoHideOpenOnDragHover.gif)
 
-Said dock must be set to accept drops to hide when cursor leaves its scope.
+Said dock must be set to accept drops to hide when cursor leaves its scope. See `AutoHideDragNDropExample` for more details.
 
 ## DockWidget Feature Flags
 

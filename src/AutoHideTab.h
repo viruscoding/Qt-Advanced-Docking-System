@@ -67,6 +67,7 @@ private:
 
 private Q_SLOTS:
 	void onAutoHideToActionClicked();
+	void onDragHoverDelayExpired();
 
 protected:
 	void setSideBar(CAutoHideSideBar *SideTabBar);
@@ -78,7 +79,6 @@ protected:
 	virtual void mouseMoveEvent(QMouseEvent* ev) override;
     virtual void dragEnterEvent(QDragEnterEvent* ev) override;
     virtual void dragLeaveEvent(QDragLeaveEvent* ev) override;
-    virtual void dragMoveEvent(QDragMoveEvent* ev) override;
 
 public:
     using Super = CPushButton;

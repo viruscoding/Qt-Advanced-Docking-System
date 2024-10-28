@@ -660,8 +660,7 @@ bool CAutoHideDockContainer::event(QEvent* event)
 //============================================================================
 void CAutoHideDockContainer::dragLeaveEvent(QDragLeaveEvent*)
 {
-    if (CDockManager::testAutoHideConfigFlag(
-            CDockManager::AutoHideOpenOnDragHover))
+    if (CDockManager::testAutoHideConfigFlag(CDockManager::AutoHideOpenOnDragHover))
     {
         collapseView(true);
     }

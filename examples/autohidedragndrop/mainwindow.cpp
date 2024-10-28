@@ -29,6 +29,7 @@ CMainWindow::CMainWindow(QWidget *parent)
     CDockManager::setConfigFlag(CDockManager::FocusHighlighting, true);
     CDockManager::setAutoHideConfigFlags(CDockManager::DefaultAutoHideConfig);
     CDockManager::setAutoHideConfigFlag(CDockManager::AutoHideOpenOnDragHover, true);
+    CDockManager::setConfigParam(CDockManager::AutoHideOpenOnDragHoverDelay_ms, 500);
     DockManager = new CDockManager(this);
 
     // Set central widget
@@ -39,16 +40,30 @@ CMainWindow::CMainWindow(QWidget *parent)
     auto* CentralDockArea = DockManager->setCentralWidget(CentralDockWidget);
     CentralDockArea->setAllowedAreas(DockWidgetArea::OuterDockAreas);
 
-    DroppableItem* droppableItem = new DroppableItem("Drop text here.");
-    CDockWidget* dropDockWidget = new CDockWidget("Tab");
-    dropDockWidget->setWidget(droppableItem);
-    dropDockWidget->setMinimumSizeHintMode(CDockWidget::MinimumSizeHintFromDockWidget);
-    dropDockWidget->setMinimumSize(200,150);
-    dropDockWidget->setAcceptDrops(true);
-    const auto autoHideContainer = DockManager->addAutoHideDockWidget(SideBarLocation::SideBarLeft, dropDockWidget);
-    autoHideContainer->setSize(480);
-    autoHideContainer->setAcceptDrops(true);
-    ui->menuView->addAction(dropDockWidget->toggleViewAction());
+    {
+    	DroppableItem* droppableItem = new DroppableItem("Drop text here.");
+		CDockWidget* dropDockWidget = new CDockWidget("Tab 1");
+		dropDockWidget->setWidget(droppableItem);
+		dropDockWidget->setMinimumSizeHintMode(CDockWidget::MinimumSizeHintFromDockWidget);
+		dropDockWidget->setMinimumSize(200,150);
+		dropDockWidget->setAcceptDrops(true);
+		const auto autoHideContainer = DockManager->addAutoHideDockWidget(SideBarLocation::SideBarLeft, dropDockWidget);
+		autoHideContainer->setSize(480);
+		autoHideContainer->setAcceptDrops(true);
+		ui->menuView->addAction(dropDockWidget->toggleViewAction());
+    }
+    {
+    	DroppableItem* droppableItem = new DroppableItem("Drop text here.");
+		CDockWidget* dropDockWidget = new CDockWidget("Tab 2");
+		dropDockWidget->setWidget(droppableItem);
+		dropDockWidget->setMinimumSizeHintMode(CDockWidget::MinimumSizeHintFromDockWidget);
+		dropDockWidget->setMinimumSize(200,150);
+		dropDockWidget->setAcceptDrops(true);
+		const auto autoHideContainer = DockManager->addAutoHideDockWidget(SideBarLocation::SideBarRight, dropDockWidget);
+		autoHideContainer->setSize(480);
+		autoHideContainer->setAcceptDrops(true);
+		ui->menuView->addAction(dropDockWidget->toggleViewAction());
+    }
 
     QTableWidget* propertiesTable = new QTableWidget();
     propertiesTable->setColumnCount(3);

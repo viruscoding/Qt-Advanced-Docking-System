@@ -23,7 +23,7 @@ SOURCES += \
     droppableitem.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
     droppableitem.h
 
 FORMS += \

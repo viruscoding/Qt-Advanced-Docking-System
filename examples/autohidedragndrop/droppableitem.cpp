@@ -24,6 +24,7 @@ void DroppableItem::dragEnterEvent(QDragEnterEvent* event)
 
 void DroppableItem::dragLeaveEvent(QDragLeaveEvent* event)
 {
+	Q_UNUSED(event);
     unsetCursor();
 }
 

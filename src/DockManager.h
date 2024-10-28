@@ -263,6 +263,15 @@ public:
 	};
     Q_DECLARE_FLAGS(AutoHideFlags, eAutoHideFlag)
 
+	/**
+	 * Global configuration parameters that you can set via setConfigParam()
+	 */
+	enum eConfigParam
+	{
+    	AutoHideOpenOnDragHoverDelay_ms, ///< Delay in ms before the dock opens on drag hover if AutoHideOpenOnDragHover flag is set
+    	ConfigParamCount // just a delimiter to count number of config params
+	};
+
 
 	/**
 	 * Default Constructor.
@@ -323,6 +332,17 @@ public:
 	 * Returns true if the given overlay config flag is set
 	 */
 	static bool testAutoHideConfigFlag(eAutoHideFlag Flag);
+
+	/**
+	 * Sets the value for the given config parameter
+	 */
+	static void setConfigParam(eConfigParam Param, QVariant Value);
+
+	/**
+	 * Returns the value for the given config parameter or the default value
+	 * if the parameter is not set.
+	 */
+	static QVariant configParam(eConfigParam Param, QVariant Default);
 
 	/**
 	 * Returns the global icon provider.

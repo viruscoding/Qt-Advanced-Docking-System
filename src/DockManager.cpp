@@ -48,6 +48,7 @@
 #include <QApplication>
 #include <QWindow>
 #include <QWindowStateChangeEvent>
+#include <QVector>
 
 #include "FloatingDockContainer.h"
 #include "DockOverlay.h"
@@ -94,6 +95,7 @@ enum eStateFileVersion
 
 static CDockManager::ConfigFlags StaticConfigFlags = CDockManager::DefaultNonOpaqueConfig;
 static CDockManager::AutoHideFlags StaticAutoHideConfigFlags; // auto hide feature is disabled by default
+static QVector<QVariant> StaticConfigParams(CDockManager::ConfigParamCount);
 
 static QString FloatingContainersTitle;
 
@@ -1472,6 +1474,20 @@ void CDockManager::lockDockWidgetFeaturesGlobally(CDockWidget::DockWidgetFeature
 CDockWidget::DockWidgetFeatures CDockManager::globallyLockedDockWidgetFeatures() const
 {
 	return d->LockedDockWidgetFeatures;
+}
+
+
+//===========================================================================
+void CDockManager::setConfigParam(CDockManager::eConfigParam Param, QVariant Value)
+{
+	StaticConfigParams[Param] = Value;
+}
+
+
+//===========================================================================
+QVariant CDockManager::configParam(eConfigParam Param, QVariant Default)
+{
+	return StaticConfigParams[Param].isValid() ? StaticConfigParams[Param] : Default;
 }
 
 

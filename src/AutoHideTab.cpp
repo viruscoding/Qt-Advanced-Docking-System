@@ -613,7 +613,7 @@ void CAutoHideTab::onDragHoverDelayExpired()
 	auto AutoHideContainer = d->DockWidget->autoHideDockContainer();
 	AutoHideContainer->collapseView(false);
 	d->DockWidget->dockManager()->setProperty(PropertyId,
-		QVariant::fromValue(QPointer(AutoHideContainer)));
+        QVariant::fromValue(QPointer<CAutoHideDockContainer>(AutoHideContainer)));
 }
 
 

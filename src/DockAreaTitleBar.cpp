@@ -733,6 +733,11 @@ void CDockAreaTitleBar::mouseDoubleClickEvent(QMouseEvent *event)
 		return;
 	}
 
+	if (!CDockManager::testConfigFlag(CDockManager::DoubleClickUndocksWidget))
+	{
+		return;
+	}
+
 	d->makeAreaFloating(event->pos(), DraggingInactive);
 }
 

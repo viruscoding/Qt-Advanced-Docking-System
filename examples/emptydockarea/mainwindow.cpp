@@ -37,6 +37,7 @@ CMainWindow::CMainWindow(QWidget *parent)
 	ads::CDockManager::setConfigFlag( ads::CDockManager::DockAreaHasUndockButton, false );
 	ads::CDockManager::setConfigFlag( ads::CDockManager::DockAreaDynamicTabsMenuButtonVisibility, true );
 	ads::CDockManager::setConfigFlag( ads::CDockManager::DisableTabTextEliding, true );
+	ads::CDockManager::setConfigFlag( ads::CDockManager::DoubleClickUndocksWidget, false );
     DockManager = new CDockManager(this);
 
     // Set central widget

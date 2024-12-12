@@ -699,7 +699,7 @@ QString CDockWidgetTab::text() const
 //============================================================================
 void CDockWidgetTab::mouseDoubleClickEvent(QMouseEvent *event)
 {
-	if (event->button() == Qt::LeftButton) 
+	if (event->button() == Qt::LeftButton && CDockManager::testConfigFlag(CDockManager::DoubleClickUndocksWidget))
 	{
 		// If this is the last dock area in a dock container it does not make
 		// sense to move it to a new floating widget and leave this one

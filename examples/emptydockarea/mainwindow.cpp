@@ -32,9 +32,11 @@ CMainWindow::CMainWindow(QWidget *parent)
     , ui(new Ui::CMainWindow)
 {
     ui->setupUi(this);
-    CDockManager::setConfigFlag(CDockManager::OpaqueSplitterResize, true);
-    CDockManager::setConfigFlag(CDockManager::XmlCompressionEnabled, false);
-    CDockManager::setConfigFlag(CDockManager::FocusHighlighting, true);
+	ads::CDockManager::setConfigFlag( ads::CDockManager::DockAreaHasCloseButton, false );
+	ads::CDockManager::setConfigFlag( ads::CDockManager::AllTabsHaveCloseButton, true );
+	ads::CDockManager::setConfigFlag( ads::CDockManager::DockAreaHasUndockButton, false );
+	ads::CDockManager::setConfigFlag( ads::CDockManager::DockAreaDynamicTabsMenuButtonVisibility, true );
+	ads::CDockManager::setConfigFlag( ads::CDockManager::DisableTabTextEliding, true );
     DockManager = new CDockManager(this);
 
     // Set central widget
@@ -98,8 +100,13 @@ void CMainWindow::createPerspectiveUi()
 	PerspectiveComboBox = new QComboBox(this);
 	PerspectiveComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 	PerspectiveComboBox->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+	connect(PerspectiveComboBox, &QComboBox::textActivated,
+        DockManager, &CDockManager::openPerspective);
+#else
 	connect(PerspectiveComboBox, SIGNAL(activated(const QString&)),
 		DockManager, SLOT(openPerspective(const QString&)));
+#endif
 	PerspectiveListAction->setDefaultWidget(PerspectiveComboBox);
 	ui->toolBar->addSeparator();
 	ui->toolBar->addAction(PerspectiveListAction);

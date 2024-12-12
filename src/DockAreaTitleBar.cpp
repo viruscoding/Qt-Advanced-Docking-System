@@ -385,7 +385,10 @@ void CDockAreaTitleBar::resizeEvent(QResizeEvent *event)
 	if (CDockManager::testConfigFlag(CDockManager::DockAreaDynamicTabsMenuButtonVisibility)
 	 && CDockManager::testConfigFlag(CDockManager::DisableTabTextEliding))
 	{
-		markTabsMenuOutdated();
+		// Use queued connection to ensure that the resizing and relayouting has
+		// finished to ensure that the d->TabBar->areTabsOverflowing() function
+		// returns the correct value
+		QMetaObject::invokeMethod(this, "markTabsMenuOutdated", Qt::QueuedConnection);
 	}
 }
 

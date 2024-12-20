@@ -29,8 +29,8 @@
   - [`MiddleMouseButtonClosesTab`](#middlemousebuttonclosestab)
   - [`DisableTabTextEliding`](#disabletabtexteliding)
   - [`ShowTabTextOnlyForActiveTab`](#showtabtextonlyforactivetab)
-- [Auto-Hide Configuration Flags](#auto-hide-configuration-flags)
-  - [Auto Hide Dock Widgets](#auto-hide-dock-widgets)
+  - [`DoubleClickUndocksWidget`](#doubleclickundockswidget)
+- [Auto Hide Dock Widgets](#auto-hide-dock-widgets)
   - [Pinning Auto-Hide Widgets to a certain border](#pinning-auto-hide-widgets-to-a-certain-border)
   - [Show / Hide Auto-Hide Widgets via Mouse Over](#show--hide-auto-hide-widgets-via-mouse-over)
   - [Drag \& Drop to Auto-Hide](#drag--drop-to-auto-hide)
@@ -39,6 +39,7 @@
   - [Auto-Hide Drag to Float / Dock](#auto-hide-drag-to-float--dock)
   - [Auto-Hide Context Menu](#auto-hide-context-menu)
   - [Adding Auto Hide Widgets](#adding-auto-hide-widgets)
+- [Auto-Hide Configuration Flags](#auto-hide-configuration-flags)
   - [Setting Auto-Hide Flags](#setting-auto-hide-flags)
   - [`AutoHideFeatureEnabled`](#autohidefeatureenabled)
   - [`DockAreaHasAutoHideButton`](#dockareahasautohidebutton)
@@ -63,6 +64,8 @@
 - [Central Widget](#central-widget)
 - [Empty Dock Area](#empty-dock-area)
 - [Custom Close Handling](#custom-close-handling)
+- [Globally Lock Docking Features](#globally-lock-docking-features)
+- [Dock Widget Size / Minimum Size Handling](#dock-widget-size--minimum-size-handling)
 - [Styling](#styling)
   - [Disabling the Internal Style Sheet](#disabling-the-internal-style-sheet)
 
@@ -496,9 +499,12 @@ for active tabs. Inactive tabs only show their icon:
 
 ![MShowTabTextOnlyForActiveTab true](cfg_flag_ShowTabTextOnlyForActiveTab_true.png)
 
-## Auto-Hide Configuration Flags
+### `DoubleClickUndocksWidget`
 
-### Auto Hide Dock Widgets
+If the flag is set (default), a double click on a tab undocks the dock widget.
+If you would like to disable undocking, just clear this flag.
+
+## Auto Hide Dock Widgets
 
 The Advanced Docking System supports "Auto-Hide" functionality for **all**
 dock containers. The "Auto Hide" feature allows to display more information
@@ -598,6 +604,8 @@ DockManager->addAutoHideDockWidget(SideBarLeft, TableDockWidget);
 ```
 
 See `autohide` example or the demo application to learn how it works.
+
+## Auto-Hide Configuration Flags
 
 ### Setting Auto-Hide Flags
 
@@ -834,6 +842,93 @@ auto* CentralDockArea = DockManager->setCentralWidget(CentralDockWidget);
 Normally clicking the close button of a dock widget will just hide the widget and the user can show it again using the `toggleView()` action of the dock widget. This is meant for user interfaces with a static amount of widgets. But the advanced docking system also supports dynamic dock widgets that will get deleted on close. If you set the dock widget flag `DockWidgetDeleteOnClose` for a certain dock widget, then it will be deleted as soon as you close this dock widget. This enables the implementation of user interfaces with dynamically created editors, like in word processing applications or source code development tools.
 
 When an entire area is closed, the default behavior is to hide the dock widgets it contains regardless of the `DockWidgetDeleteOnClose` flag except if there is only one dock widget. In this special case, the `DockWidgetDeleteOnClose` flag is followed. This behavior can be changed by setting the `DockWidgetForceCloseWithArea` flag to all the dock widgets that needs to be closed with their area.
+
+## Globally Lock Docking Features
+
+It is possible to globally lock features of all dock widgets to "freeze" the
+current workspace layout. That means, you can now lock your workspace
+to avoid accidentally dragging a docked view. When locking was't possible,
+users had to manually dock it back to the desired place after each accidental
+undock.
+
+You can use a combination of the following feature flags to define which features
+shall get locked:
+
+- CDockWidget::DockWidgetClosable
+- CDockWidget::DockWidgetMovable
+- CDockWidget::DockWidgetFloatable
+- CDockWidget::DockWidgetPinable
+
+To clear the locked features, you can use CDockWidget::NoDockWidgetFeatures
+The following code shows how to lock and unlock all dock widget features
+globally.
+
+```c++
+DockManager->lockDockWidgetFeaturesGlobally();
+DockManager->lockDockWidgetFeaturesGlobally(CDockWidget::NoDockWidgetFeatures);
+```
+
+## Dock Widget Size / Minimum Size Handling
+
+There are several `CDockWidget` mode enums to control how a `CDockWidget` is
+resized and how the docking system handles the minimum size of a dockwidget.
+
+The first one is the `eInsertMode` enum:
+
+```c++
+enum eInsertMode
+{
+    AutoScrollArea,
+    ForceScrollArea,
+    ForceNoScrollArea
+};
+```
+
+The InsertMode defines how the widget is inserted into the dock widget, when you 
+call the `CDockWidget::setWidget` method:
+
+```c++
+DockWidget->setWidget(widget, CDockWidget::AutoScrollArea);
+```
+
+The content of a dock widget should be resizable do a very small size to
+prevent the dock widget from blocking the resizing. To ensure, that a
+dock widget can be resized very well, it is better to insert the content
+widget into a scroll area or to provide a widget that is already a scroll
+area or that contains a scroll area (such as an `QAbstractItemView`)
+If the InsertMode is `AutoScrollArea`, the DockWidget tries to automatically
+detect how to insert the given widget. If the widget is derived from
+`QScrollArea` (i.e. an `QAbstractItemView`), then the widget is inserted
+directly. If the given widget is not a scroll area, the widget will be
+inserted into a scroll area.
+
+To force insertion into a scroll area, you can also provide the InsertMode
+`ForceScrollArea`. In this case a scroll area will also be created for content
+widgets that are derived from `QScrollArea` To prevent insertion into a scroll
+area, you can provide the InsertMode `ForceNoScrollArea`. In this case, the
+content widget is always inserted directly.
+
+A second enum, the `eMinimumSizeHintMode` defines, which value will be returned
+from the `CDockWidget::minimumSizeHint()` function:
+
+```c++
+enum eMinimumSizeHintMode
+{
+    MinimumSizeHintFromDockWidget,
+    MinimumSizeHintFromContent,
+    MinimumSizeHintFromDockWidgetMinimumSize,
+    MinimumSizeHintFromContentMinimumSize,
+};
+```
+
+To ensure, that a dock widget does not block resizing, the dock widget
+reimplements `minimumSizeHint()` function to return a very small minimum
+size hint. If you would like to adhere the `minimumSizeHint()` from the
+content widget, then set the `minimumSizeHintMode()` to
+`MinimumSizeHintFromContent`. If you would like to use the `minimumSize()`
+value of the content widget or the dock widget, then you can use the
+`MinimumSizeHintFromDockWidgetMinimumSize` or
+`MinimumSizeHintFromContentMinimumSize` modes.
 
 ## Styling
 

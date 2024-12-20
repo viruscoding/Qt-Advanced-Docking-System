@@ -115,6 +115,14 @@ struct DockAreaTitleBarPrivate
 	}
 
 	/**
+	 * Convenience function for access to dock manager components factory
+	 */
+	QSharedPointer<ads::CDockComponentsFactory> componentsFactory() const
+	{
+        return dockManager()->componentsFactory();
+    }
+
+	/**
 	 * Returns true if the given config flag is set
 	 * Convenience function to ease config flag testing
 	 */

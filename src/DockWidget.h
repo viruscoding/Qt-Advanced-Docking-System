@@ -256,8 +256,18 @@ public:
      * during runtime, you need to set a unique object name explicitly
      * by calling setObjectName() after construction.
      * Use the layoutFlags to configure the layout of the dock widget.
+     * \note If you would like to use custom TabWidget implementations, you need
+     * to use the constructor with the CDockManager argument.
      */
-    CDockWidget(const QString &title, QWidget* parent = nullptr);
+    explicit CDockWidget(const QString &title, QWidget* parent = nullptr);
+
+    /**
+     * Creates a dock widget and assigns the dock manager that manages this
+     * widget.
+     * This allows the dock widget to use the componentsFactory() of the dock
+     * manager in the constructot to create its components.
+     */
+    CDockWidget(CDockManager *manager, const QString &title, QWidget* parent = nullptr);
 
     /**
      * Virtual Destructor

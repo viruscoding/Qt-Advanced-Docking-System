@@ -291,6 +291,24 @@ public:
 	virtual ~CDockManager() override;
 
 	/**
+	 * Returns the dock manager specific factory for creating components of
+	 * fock widgets
+	 */
+    QSharedPointer<ads::CDockComponentsFactory> componentsFactory() const;
+
+    /**
+     * Sets a custom factory for creating components of dock widgets.
+     * The pointer is stored internally into a shared pointer so you should not
+     * delete the given factory object as long as it is used by the dock manager.
+     */
+    void setComponentsFactory(ads::CDockComponentsFactory* Factory);
+
+    /**
+     * Sets a custom factory for creating components of dock widgets.
+     */
+    void setComponentsFactory(QSharedPointer<ads::CDockComponentsFactory>);
+
+	/**
 	 * This function returns the global configuration flags
 	 */
 	static ConfigFlags configFlags();

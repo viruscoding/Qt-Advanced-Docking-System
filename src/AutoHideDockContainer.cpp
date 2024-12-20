@@ -125,6 +125,21 @@ struct AutoHideDockContainerPrivate
 	AutoHideDockContainerPrivate(CAutoHideDockContainer *_public);
 
 	/**
+	 * Convenience function to ease access to dock manager components factory
+	 */
+	QSharedPointer<ads::CDockComponentsFactory> componentsFactory() const
+	{
+		if (!DockWidget || !DockWidget->dockManager())
+		{
+			return CDockComponentsFactory::factory();
+		}
+		else
+		{
+			return DockWidget->dockManager()->componentsFactory();
+		}
+    }
+
+	/**
 	 * Convenience function to get a dock widget area
 	 */
 	DockWidgetArea getDockWidgetArea(SideBarLocation area)
@@ -199,7 +214,7 @@ CAutoHideDockContainer::CAutoHideDockContainer(CDockWidget* DockWidget, SideBarL
 {
 	hide(); // auto hide dock container is initially always hidden
 	d->SideTabBarArea = area;
-	d->SideTab = componentsFactory()->createDockWidgetSideTab(nullptr);
+	d->SideTab = d->componentsFactory()->createDockWidgetSideTab(nullptr);
 	connect(d->SideTab, &CAutoHideTab::pressed, this, &CAutoHideDockContainer::toggleCollapseState);
 	d->DockArea = new CDockAreaWidget(DockWidget->dockManager(), parent);
 	d->DockArea->setObjectName("autoHideDockArea");

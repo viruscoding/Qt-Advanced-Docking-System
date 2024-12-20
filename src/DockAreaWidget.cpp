@@ -270,6 +270,14 @@ struct DockAreaWidgetPrivate
 	DockAreaWidgetPrivate(CDockAreaWidget* _public);
 
 	/**
+	 * Convencience function to ease components factory access
+	 */
+	QSharedPointer<ads::CDockComponentsFactory> componentsFactory() const
+	{
+        return DockManager->componentsFactory();
+    }
+
+	/**
 	 * Creates the layout for top area with tabs and close button
 	 */
 	void createTitleBar();

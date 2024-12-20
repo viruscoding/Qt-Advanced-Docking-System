@@ -586,6 +586,13 @@ CDockManager::~CDockManager()
 
 
 //============================================================================
+CDockWidget* CDockManager::createDockWidget(const QString &title, QWidget* parent)
+{
+	return new CDockWidget(this, title, parent);
+}
+
+
+//============================================================================
 QSharedPointer<ads::CDockComponentsFactory> CDockManager::componentsFactory() const
 {
     return d->ComponentFactory;

@@ -51,6 +51,7 @@
   - [`AutoHideHasCloseButton`](#autohidehasclosebutton)
   - [`AutoHideHasMinimizeButton`](#autohidehasminimizebutton)
   - [`AutoHideOpenOnDragHover`](#autohideopenondraghover)
+  - [`AutoHideCloseOnOutsideMouseClick`](#autohidecloseonoutsidemouseclick)
 - [DockWidget Feature Flags](#dockwidget-feature-flags)
   - [`DockWidgetClosable`](#dockwidgetclosable)
   - [`DockWidgetMovable`](#dockwidgetmovable)
@@ -713,7 +714,6 @@ If this flag is set (disabled by default), then each auto hide widget has a mini
 
 ![AutoHideHasMinimizeButton](cfg_flag_AutoHideHasMinimizeButton.png)
 
-
 ### `AutoHideOpenOnDragHover`
 
 If this flag is set (disabled by default), then holding a dragging cursor hover an auto-hide collapsed dock's tab will open said dock:
@@ -721,6 +721,12 @@ If this flag is set (disabled by default), then holding a dragging cursor hover 
 ![AutoHideOpenOnDragHover](cfg_flag_AutoHideOpenOnDragHover.gif)
 
 Said dock must be set to accept drops to hide when cursor leaves its scope. See `AutoHideDragNDropExample` for more details.
+
+### `AutoHideCloseOnOutsideMouseClick`
+
+If this flag is set (default), the auto hide dock container will collapse if the
+user clicks outside of the container. If not set, the auto hide container can be
+closed only via click on auto hide sidebar tab.
 
 ## DockWidget Feature Flags
 

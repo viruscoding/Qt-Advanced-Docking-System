@@ -860,12 +860,12 @@ undock.
 You can use a combination of the following feature flags to define which features
 shall get locked:
 
-- CDockWidget::DockWidgetClosable
-- CDockWidget::DockWidgetMovable
-- CDockWidget::DockWidgetFloatable
-- CDockWidget::DockWidgetPinable
+- `CDockWidget::DockWidgetClosable`
+- `CDockWidget::DockWidgetMovable`
+- `CDockWidget::DockWidgetFloatable`
+- `CDockWidget::DockWidgetPinable`
 
-To clear the locked features, you can use CDockWidget::NoDockWidgetFeatures
+To clear the locked features, you can use `CDockWidget::NoDockWidgetFeatures`
 The following code shows how to lock and unlock all dock widget features
 globally.
 

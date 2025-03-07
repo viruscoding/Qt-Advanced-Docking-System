@@ -1523,6 +1523,16 @@ QVariant CDockManager::configParam(eConfigParam Param, QVariant Default)
 }
 
 
+//===========================================================================
+void CDockManager::raise()
+{
+    if (parentWidget())
+    {
+        parentWidget()->raise();
+    }
+}
+
+
 } // namespace ads
 
 //---------------------------------------------------------------------------

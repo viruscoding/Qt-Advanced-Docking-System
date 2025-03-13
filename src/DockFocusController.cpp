@@ -248,15 +248,6 @@ void CDockFocusController::onFocusWindowChanged(QWindow *focusWindow)
 		return;
 	}
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
-    // bring the main application window that hosts the dock manager in front of
-    // any other application
-    d->DockManager->raise();
-
-    // ensure that the dragged floating window is in front of the main application window
-    focusWindow->raise();
-#endif
-
     auto vDockWidget = focusWindow->property(FocusedDockWidgetProperty);
 	if (!vDockWidget.isValid())
 	{

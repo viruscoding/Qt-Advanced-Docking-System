@@ -530,12 +530,16 @@ CDockManager::CDockManager(QWidget *parent) :
 	window()->installEventFilter(this);
 
 #if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
-    connect(qApp, &QApplication::focusWindowChanged, [](QWindow* focusWindow)
+    connect(qApp, &QApplication::focusWindowChanged, [this](QWindow* focusWindow)
     {
-        // bring modal dialogs to foreground to ensure that they are in front of any
-        // floating dock widget
-        if (focusWindow && focusWindow->isModal())
+        if (focusWindow)
         {
+            // bring the main application window that hosts the dock manager in front of
+            // any other application
+            this->raise();
+
+            // ensure that the dragged floating window is in front of the main application window
+            // this will also ensure that modal dialogs come to foreground
             focusWindow->raise();
         }
     });

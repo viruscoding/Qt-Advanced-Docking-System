@@ -532,16 +532,25 @@ CDockManager::CDockManager(QWidget *parent) :
 #if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
     connect(qApp, &QApplication::focusWindowChanged, [this](QWindow* focusWindow)
     {
-        if (focusWindow)
+        if (!focusWindow)
         {
-            // bring the main application window that hosts the dock manager in front of
-            // any other application
-            this->raise();
-
-            // ensure that the dragged floating window is in front of the main application window
-            // this will also ensure that modal dialogs come to foreground
-            focusWindow->raise();
+            return;
         }
+
+        // bring the main application window that hosts the dock manager and all floating
+        // widgets in front of any other application
+        this->raise();
+        for (auto FloatingWidget : d->FloatingWidgets)
+        {
+            if (FloatingWidget)
+            {
+                FloatingWidget->raise();
+            }
+        }
+
+        // ensure that the dragged floating window is in front of the main application window
+        // and any other floating widget - this will also ensure that modal dialogs come to foreground
+        focusWindow->raise();
     });
 #endif
 }

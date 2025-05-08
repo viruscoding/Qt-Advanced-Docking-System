@@ -2,26 +2,7 @@ name: linux-builds
 
 on: [push]
 
-jobs:
-  build:
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
-
-    runs-on: ${{ matrix.os }}
-    
-    steps:
-    - uses: actions/checkout@v1
-    - name: install qt
-      run: |
-        sudo apt-get update --fix-missing
-        sudo apt-get install qt5-default
-        sudo apt-get install qtbase5-private-dev qtdeclarative5-dev
-    - name: qmake
-      run: qmake
-    - name: make
-      run: make -j4
-      
+jobs:     
   build_ubuntu_2204:
     runs-on: ubuntu-22.04
     steps:

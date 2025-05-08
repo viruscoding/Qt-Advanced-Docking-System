@@ -33,10 +33,11 @@ jobs:
 
     - name: Configure with CMake
       run: |
-        cmake -S . -B build \
-          -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}/Qt/${{ env.QT_VERSION }}/gcc_64" \
-          -DCMAKE_BUILD_TYPE=Release \
-          -G Ninja
+          cmake -S . -B build \
+            -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}/Qt/${{ env.QT_VERSION }}/gcc_64" \
+            -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja
 
     - name: Build
       run: cmake --build build

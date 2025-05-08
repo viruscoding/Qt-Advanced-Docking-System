@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 project(QtAdvancedDockingSystem LANGUAGES CXX VERSION ${VERSION_SHORT})
 include(GNUInstallDirs)
 if (${QT_VERSION_MAJOR})
@@ -85,6 +85,11 @@ add_library(ads::${library_name} ALIAS ${library_name})
 target_link_libraries(${library_name} PUBLIC Qt${QT_VERSION_MAJOR}::Core 
                                                Qt${QT_VERSION_MAJOR}::Gui 
                                                Qt${QT_VERSION_MAJOR}::Widgets)
+
+if(QT_VERSION_MAJOR STREQUAL "6")
+    target_link_libraries(${library_name} PRIVATE Qt6::GuiPrivate) #needed for <qpa/qplatformnativeinterface.h>
+endif()
+
 if (UNIX AND NOT APPLE)
   if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
       find_package(X11 REQUIRED)

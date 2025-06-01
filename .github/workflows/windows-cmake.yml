@@ -54,7 +54,7 @@ jobs:
       shell: powershell
 
   build_windows_mingw:
-    name: Build with MinGW and CMake (no Ninja)
+    name: Build with Qt's MinGW and CMake (no Ninja)
     runs-on: windows-2022
 
     env:
@@ -67,15 +67,7 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: ⚙️ Install MinGW toolchain
-      run: choco install mingw --no-progress
-      shell: powershell
-
-    - name: ➕ Add MinGW to system PATH
-      run: echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" >> $env:GITHUB_PATH
-      shell: powershell
-
-    - name: 📥 Install Qt for MinGW
+    - name: 📥 Install Qt for MinGW (with bundled toolchain)
       uses: jurplel/install-qt-action@v4
       with:
         aqtversion: '==3.1.19'
@@ -85,6 +77,12 @@ jobs:
         arch: win64_mingw
         dir: ${{ env.QT_DIR }}
         setup-python: false
+
+    - name: ➕ Add Qt-bundled MinGW to PATH
+      shell: powershell
+      run: |
+        $mingwPath = Get-ChildItem "${{ env.QT_DIR }}\Tools" | Where-Object { $_.Name -like "mingw*" } | Select-Object -First 1
+        echo "${{ env.QT_DIR }}\Tools\$($mingwPath.Name)\bin" >> $env:GITHUB_PATH
 
     - name: 🛠️ Configure CMake (MinGW)
       shell: powershell

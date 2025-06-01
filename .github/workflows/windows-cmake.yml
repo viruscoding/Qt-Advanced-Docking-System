@@ -3,6 +3,8 @@ name: windows-builds
 # Trigger this workflow on any push or manual dispatch
 on:
   push:
+    branches:
+      - ci-dev
   workflow_dispatch:
 
 jobs:
@@ -38,12 +40,12 @@ jobs:
       # Use windows-msvc shell that auto-sets MSVC environment variables
       shell: windows-msvc
       run: |
-        cmake -S . -B build `
-          -G Ninja `                              # Use Ninja generator
-          -A x64 `                               # Target 64-bit architecture
-          -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}\Qt\${{ env.QT_VERSION }}\msvc2019_64" `  # Qt install path for CMake
-          -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\install" `                        # Install path
-          -DCMAKE_BUILD_TYPE=Release             # Release build type
+        cmake -S . -B build ^
+          -G Ninja ^
+          -A x64 ^
+          -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}\Qt\${{ env.QT_VERSION }}\msvc2019_64" ^
+          -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\install" ^
+          -DCMAKE_BUILD_TYPE=Release
 
     - name: 🔨 Build with Ninja + MSVC
       shell: windows-msvc

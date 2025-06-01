@@ -60,7 +60,6 @@ jobs:
     env:
       QT_VERSION: 6.8.2
       QT_DIR: ${{ github.workspace }}\Qt
-      QT_CACHE_KEY: qt-${{ runner.os }}-${{ env.QT_VERSION }}-mingw
 
     steps:
     - name: 📦 Checkout source code
@@ -68,15 +67,7 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: 💾 Restore Qt cache
-      id: qt-cache
-      uses: actions/cache@v4
-      with:
-        path: ${{ env.QT_DIR }}
-        key: ${{ env.QT_CACHE_KEY }}
-
-    - name: 📥 Install Qt + MinGW (if not cached)
-      if: steps.qt-cache.outputs.cache-hit != 'true'
+    - name: 📥 Install Qt + MinGW
       uses: jurplel/install-qt-action@v4
       with:
         aqtversion: '==3.1.19'

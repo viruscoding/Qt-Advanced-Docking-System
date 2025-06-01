@@ -54,7 +54,7 @@ jobs:
       shell: powershell
 
   build_windows_mingw:
-    name: Build with MinGW and CMake
+    name: Build with MinGW and CMake (no Ninja)
     runs-on: windows-2022
 
     env:
@@ -67,10 +67,8 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: ⚙️ Install Ninja and MinGW toolchain
-      run: |
-        choco install ninja --no-progress
-        choco install mingw --no-progress
+    - name: ⚙️ Install MinGW toolchain
+      run: choco install mingw --no-progress
       shell: powershell
 
     - name: ➕ Add MinGW to system PATH
@@ -84,7 +82,7 @@ jobs:
         version: ${{ env.QT_VERSION }}
         target: desktop
         host: windows
-        arch: win64_mingw81
+        arch: win64_mingw
         dir: ${{ env.QT_DIR }}
         setup-python: false
 
@@ -95,11 +93,11 @@ jobs:
           -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}\Qt\${{ env.QT_VERSION }}\mingw_64" `
           -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\install `
           -DCMAKE_BUILD_TYPE=Release `
-          -G Ninja
+          -G "MinGW Makefiles"
 
     - name: 🔨 Build with CMake (MinGW)
       shell: powershell
-      run: cmake --build build-mingw
+      run: cmake --build build-mingw -- -j2
 
     - name: 📦 Install built files (MinGW)
       shell: powershell

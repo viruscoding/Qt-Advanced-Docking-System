@@ -53,50 +53,60 @@ jobs:
       run: cmake --install build
       shell: powershell
 
-  build_windows_mingw:
-    name: Build with Qt's MinGW and CMake (no Ninja)
-    runs-on: windows-2022
+build_windows_mingw:
+  name: Build with Qt's MinGW and CMake (no Ninja)
+  runs-on: windows-2022
 
-    env:
-      QT_VERSION: 6.8.2
-      QT_DIR: ${{ github.workspace }}\Qt
+  env:
+    QT_VERSION: 6.8.2
+    QT_DIR: ${{ github.workspace }}\Qt
+    QT_CACHE_KEY: qt-${{ runner.os }}-${{ env.QT_VERSION }}-mingw
 
-    steps:
-    - name: 📦 Checkout source code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+  steps:
+  - name: 📦 Checkout source code
+    uses: actions/checkout@v4
+    with:
+      fetch-depth: 0
 
-    - name: 📥 Install Qt for MinGW (with bundled toolchain)
-      uses: jurplel/install-qt-action@v4
-      with:
-        aqtversion: '==3.1.19'
-        version: ${{ env.QT_VERSION }}
-        target: desktop
-        host: windows
-        arch: win64_mingw
-        dir: ${{ env.QT_DIR }}
-        setup-python: false
+  - name: 💾 Restore Qt cache
+    id: qt-cache
+    uses: actions/cache@v4
+    with:
+      path: ${{ env.QT_DIR }}
+      key: ${{ env.QT_CACHE_KEY }}
 
-    - name: ➕ Add Qt-bundled MinGW to PATH
-      shell: powershell
-      run: |
-        $mingwPath = Get-ChildItem "${{ env.QT_DIR }}\Tools" | Where-Object { $_.Name -like "mingw*" } | Select-Object -First 1
-        echo "${{ env.QT_DIR }}\Tools\$($mingwPath.Name)\bin" >> $env:GITHUB_PATH
+  - name: 📥 Install Qt + MinGW (if not cached)
+    if: steps.qt-cache.outputs.cache-hit != 'true'
+    uses: jurplel/install-qt-action@v4
+    with:
+      aqtversion: '==3.1.19'
+      version: ${{ env.QT_VERSION }}
+      target: desktop
+      host: windows
+      arch: win64_mingw
+      dir: ${{ env.QT_DIR }}
+      tools: 'tools_mingw'
+      setup-python: false
 
-    - name: 🛠️ Configure CMake (MinGW)
-      shell: powershell
-      run: |
-        cmake -S . -B build-mingw `
-          -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}\Qt\${{ env.QT_VERSION }}\mingw_64" `
-          -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\install `
-          -DCMAKE_BUILD_TYPE=Release `
-          -G "MinGW Makefiles"
+  - name: ➕ Add Qt-bundled MinGW to PATH
+    shell: powershell
+    run: |
+      $mingwPath = Get-ChildItem "${{ env.QT_DIR }}\Tools" | Where-Object { $_.Name -like "mingw*" } | Select-Object -First 1
+      echo "${{ env.QT_DIR }}\Tools\$($mingwPath.Name)\bin" >> $env:GITHUB_PATH
 
-    - name: 🔨 Build with CMake (MinGW)
-      shell: powershell
-      run: cmake --build build-mingw -- -j2
+  - name: 🛠️ Configure CMake (MinGW)
+    shell: powershell
+    run: |
+      cmake -S . -B build-mingw `
+        -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}\Qt\${{ env.QT_VERSION }}\mingw_64" `
+        -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\install `
+        -DCMAKE_BUILD_TYPE=Release `
+        -G "MinGW Makefiles"
 
-    - name: 📦 Install built files (MinGW)
-      shell: powershell
-      run: cmake --install build-mingw
+  - name: 🔨 Build with CMake (MinGW)
+    shell: powershell
+    run: cmake --build build-mingw -- -j2
+
+  - name: 📦 Install built files (MinGW)
+    shell: powershell
+    run: cmake --install build-mingw

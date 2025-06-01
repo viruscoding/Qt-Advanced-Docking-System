@@ -21,7 +21,6 @@ jobs:
 
     - name: ⚙️ Install Ninja build system
       run: choco install ninja --no-progress
-      shell: powershell
 
     - name: 📥 Install Qt for MSVC
       uses: jurplel/install-qt-action@v3
@@ -33,26 +32,26 @@ jobs:
         dir: ${{ env.QT_DIR }}
         setup-python: false
 
+    - name: 🏗️ Setup MSVC Developer Environment
+      uses: ilammy/setup-msvc-dev@v1
+      with:
+        arch: x64
+
     - name: 🛠️ Configure CMake with Ninja + MSVC
-      shell: cmd
       run: |
-        "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64 && ^
-        cmake -S . -B build -G Ninja -A x64 ^
-          -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}\Qt\${{ env.QT_VERSION }}\msvc2019_64" ^
-          -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\install" ^
+        cmake -S . -B build -G Ninja -A x64 `
+          -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}\Qt\${{ env.QT_VERSION }}\msvc2019_64" `
+          -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\install" `
           -DCMAKE_BUILD_TYPE=Release
+      shell: powershell
 
     - name: 🔨 Build with Ninja + MSVC
-      shell: cmd
-      run: |
-        "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64 && ^
-        cmake --build build
+      run: cmake --build build
+      shell: powershell
 
     - name: 📦 Install built files
-      shell: cmd
-      run: |
-        "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64 && ^
-        cmake --install build
+      run: cmake --install build
+      shell: powershell
 
   build_windows_mingw:
     name: Build with MinGW and CMake

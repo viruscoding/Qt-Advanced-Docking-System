@@ -84,7 +84,7 @@ jobs:
         version: ${{ env.QT_VERSION }}
         target: desktop
         host: windows
-        arch: win64_mingw81
+        arch: win64_mingw
         dir: ${{ env.QT_DIR }}
         setup-python: false
 

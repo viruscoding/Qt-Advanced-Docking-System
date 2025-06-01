@@ -1,0 +1,105 @@
+name: windows-builds
+
+# Trigger on:
+# - Manual runs via GitHub UI (workflow_dispatch)
+# - Pushes that touch build-relevant files
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build_windows_msvc:
+    name: Build with MSVC and CMake
+    runs-on: windows-2022
+
+    env:
+      QT_VERSION: 6.4.2
+      QT_DIR: ${{ github.workspace }}\Qt
+
+    steps:
+    - name: 📦 Checkout source code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for tags/versions if needed
+
+    - name: ⚙️ Install Ninja build system
+      run: choco install ninja --no-progress
+      shell: powershell
+
+    - name: 📥 Install Qt for MSVC
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: ${{ env.QT_VERSION }}
+        target: desktop
+        host: windows
+        arch: win64_msvc2019_64
+        dir: ${{ env.QT_DIR }}
+        setup-python: false
+
+    - name: 🛠️ Configure CMake (MSVC)
+      run: |
+        cmake -S . -B build `
+          -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}\Qt\${{ env.QT_VERSION }}\msvc2019_64" `
+          -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\install `
+          -DCMAKE_BUILD_TYPE=Release `
+          -G Ninja
+      shell: powershell
+
+    - name: 🔨 Build with CMake (MSVC)
+      run: cmake --build build
+      shell: powershell
+
+    - name: 📦 Install built files (MSVC)
+      run: cmake --install build
+      shell: powershell
+
+  build_windows_mingw:
+    name: Build with MinGW and CMake
+    runs-on: windows-2022
+
+    env:
+      QT_VERSION: 6.4.2
+      QT_DIR: ${{ github.workspace }}\Qt
+
+    steps:
+    - name: 📦 Checkout source code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: ⚙️ Install Ninja and MinGW toolchain
+      run: |
+        choco install ninja --no-progress
+        choco install mingw --no-progress
+      shell: powershell
+
+    - name: ➕ Add MinGW to system PATH
+      run: echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" >> $env:GITHUB_PATH
+      shell: powershell
+
+    - name: 📥 Install Qt for MinGW
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: ${{ env.QT_VERSION }}
+        target: desktop
+        host: windows
+        arch: mingw_64
+        dir: ${{ env.QT_DIR }}
+        setup-python: false
+
+    - name: 🛠️ Configure CMake (MinGW)
+      run: |
+        cmake -S . -B build-mingw `
+          -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}\Qt\${{ env.QT_VERSION }}\mingw_64" `
+          -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\install `
+          -DCMAKE_BUILD_TYPE=Release `
+          -G Ninja
+      shell: powershell
+
+    - name: 🔨 Build with CMake (MinGW)
+      run: cmake --build build-mingw
+      shell: powershell
+
+    - name: 📦 Install built files (MinGW)
+      run: cmake --install build-mingw
+      shell: powershell

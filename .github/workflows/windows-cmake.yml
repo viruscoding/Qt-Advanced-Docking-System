@@ -39,7 +39,7 @@ jobs:
 
     - name: 🛠️ Configure CMake with Ninja + MSVC
       run: |
-        cmake -S . -B build -G Ninja -A x64 `
+        cmake -S . -B build -G Ninja `
           -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}\Qt\${{ env.QT_VERSION }}\msvc2019_64" `
           -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\install" `
           -DCMAKE_BUILD_TYPE=Release

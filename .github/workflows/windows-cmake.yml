@@ -1,6 +1,5 @@
 name: windows-builds
 
-# Trigger on push to any branch and manual runs
 on:
   push:
   workflow_dispatch:
@@ -18,7 +17,7 @@ jobs:
     - name: 📦 Checkout source code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Fetch full history for tags if needed
+        fetch-depth: 0
 
     - name: ⚙️ Install Ninja build system
       run: choco install ninja --no-progress
@@ -34,32 +33,25 @@ jobs:
         dir: ${{ env.QT_DIR }}
         setup-python: false
 
-    - name: 🛠️ Configure CMake (Ninja + MSVC)
-      shell: pwsh
+    - name: 🛠️ Configure CMake with Ninja + MSVC
+      shell: cmd
       run: |
-        # Initialize MSVC environment variables for 64-bit architecture
-        & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64
-
-        # Run cmake with Ninja generator and MSVC toolchain
-        cmake -S . -B build -G Ninja -A x64 `
-          -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}\Qt\${{ env.QT_VERSION }}\msvc2019_64" `
-          -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\install" `
+        "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64 && ^
+        cmake -S . -B build -G Ninja -A x64 ^
+          -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}\Qt\${{ env.QT_VERSION }}\msvc2019_64" ^
+          -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}\install" ^
           -DCMAKE_BUILD_TYPE=Release
 
     - name: 🔨 Build with Ninja + MSVC
-      shell: pwsh
+      shell: cmd
       run: |
-        # Initialize MSVC environment again for build step
-        & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64
-
+        "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64 && ^
         cmake --build build
 
     - name: 📦 Install built files
-      shell: pwsh
+      shell: cmd
       run: |
-        # Initialize MSVC environment again for install step
-        & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64
-
+        "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64 && ^
         cmake --install build
 
   build_windows_mingw:

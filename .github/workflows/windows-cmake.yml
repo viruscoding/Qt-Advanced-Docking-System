@@ -23,7 +23,7 @@ jobs:
       run: choco install ninja --no-progress
 
     - name: 📥 Install Qt for MSVC
-      uses: jurplel/install-qt-action@v4
+      uses: jurplel/install-qt-action@v3
       with:
         version: ${{ env.QT_VERSION }}
         target: desktop
@@ -78,7 +78,7 @@ jobs:
       shell: powershell
 
     - name: 📥 Install Qt for MinGW
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: ${{ env.QT_VERSION }}
         target: desktop

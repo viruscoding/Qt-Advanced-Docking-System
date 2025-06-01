@@ -33,7 +33,7 @@ jobs:
         setup-python: false
 
     - name: 🏗️ Setup MSVC Developer Environment
-      uses: ilammy/setup-msvc-dev@v1
+      uses: TheMrMilchmann/setup-msvc-dev@v3
       with:
         arch: x64
 

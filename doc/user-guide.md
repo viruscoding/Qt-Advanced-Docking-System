@@ -73,6 +73,7 @@
   - [Supported Distributions](#supported-distributions)
   - [Requirements](#requirements)
   - [Manjaro xfce 25.0.1 and Xubuntu 24.04.2 issues](#manjaro-xfce-2501-and-xubuntu-24042-issues)
+- [OpenGl + ADS](#opengl--ads)
 
 ## Configuration Flags
 
@@ -990,3 +991,18 @@ can be solved by enabling the setting **Activate focus stealing prevention**. `S
 Selecting `Activate focus stealing prevention` and `Do nothing` for `When a window raises itself`, seems to mitigate the issue. Deselecting `Enable display compositing` on the `Compositor` tab, also works.
 
 ![Window Manager Tweaks](xfce4_focus_stealing_issue.png)
+
+## OpenGl + ADS
+
+If you would like to use OpenGL widgets with ADS such as `GLWidget`, QML or `QWebEngineView`, then you need
+to set `QApplication::setAttribute(Qt::AA_ShareOpenGLContexts)` before creating your application and your
+widgets (see issue [#732])
+
+```c++
+int main(int argc, char *argv[])
+{
+  QApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+  QApplication application(argc, argv);
+  ...
+}
+```

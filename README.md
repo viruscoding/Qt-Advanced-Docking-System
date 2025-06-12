@@ -16,7 +16,7 @@ featured window docking system similar to what is found in many popular
 integrated development environments (IDEs) such as Visual Studio.
 
 - [What's new...](https://github.com/githubuser0xFFFF/Qt-Advanced-Docking-System/releases/latest)
-- [Documentation](doc/user-guide.md)
+- [Documentation](https://githubuser0xffff.github.io/Qt-Advanced-Docking-System/doc/user-guide.html)
 - Original Repository: [https://github.com/githubuser0xFFFF/Qt-Advanced-Docking-System](https://github.com/githubuser0xFFFF/Qt-Advanced-Docking-System)
 
 [![Video Advanced Docking](doc/advanced-docking_video.png)](https://www.youtube.com/watch?v=7pdNfafg3Qc)
